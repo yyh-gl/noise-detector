@@ -7,16 +7,16 @@ import subprocess
 import pygame.mixer
 import time
 
-CHUNK=1024*2 # マイクによって変わる。上手くいかない場合色々試してください
-RATE=48000 # 事前に確認したサンプリング周波数
-JUDGE_INTERVAL=5 # 騒音検知インターバル
+CHUNK = 1024*2 # マイクによって変わる。上手くいかない場合色々試してください
+RATE = 48000 # 事前に確認したサンプリング周波数
+JUDGE_INTERVAL = 5 # 騒音検知インターバル
 
-max_data=[]
+max_data = []
 angry_count = 0
 
-p=pyaudio.PyAudio()
+p = pyaudio.PyAudio()
 
-stream=p.open(format = pyaudio.paInt16,
+stream = p.open(format = pyaudio.paInt16,
         channels = 1,
         rate = RATE,
         frames_per_buffer = CHUNK,
@@ -24,7 +24,7 @@ stream=p.open(format = pyaudio.paInt16,
         output = True)
 
 def audio_trans(input):
-    frames=(np.frombuffer(input,dtype="int16"))
+    frames = (np.frombuffer(input,dtype = "int16"))
     max_data.append(max(frames))
     return
 
@@ -52,8 +52,8 @@ def judge(): # 定期的に呼び出される
     global max_data
     global angry_count
     if len(max_data) != 0: # 初回実行時だけ無視
-        mic_ave=int(sum(max_data)/len(max_data)) # 60秒間のマイク受信音量の平均値を出す
-        max_data=[]
+        mic_ave = int(sum(max_data)/len(max_data)) # 60秒間のマイク受信音量の平均値を出す
+        max_data = []
         volume_text = '音量:{0}' . format(mic_ave)
         try:
             print (volume_text)
@@ -77,10 +77,10 @@ def judge(): # 定期的に呼び出される
         except:
             print ("error")
 
-    t=threading.Timer(JUDGE_INTERVAL, judge) #60秒ごとにjudgeを実行
+    t = threading.Timer(JUDGE_INTERVAL, judge) #60秒ごとにjudgeを実行
     t.start()
 
-t=threading.Thread(target=judge)
+t = threading.Thread(target = judge)
 t.start()
 
 print ("mic on")
