@@ -60,7 +60,7 @@ def judge(average_volume):
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
     print(average_volume)
     try:
-        if angry_count > 5:
+        if angry_count >= 5:
             print ('しつこーい')
             angry_count = 0
             angry(0)
