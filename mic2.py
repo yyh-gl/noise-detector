@@ -56,6 +56,7 @@ def judge(average_volume):
 
     global angry_count
 
+    print("\n")
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
     print(average_volume)
     try:
@@ -63,15 +64,15 @@ def judge(average_volume):
             print ('しつこーい')
             angry_count = 0
             angry(0)
-        elif average_volume > 0.025:
+        elif average_volume > 0.07:
             print ('怒りレベル：3')
             angry(3)
             angry_count += 1
-        elif average_volume > 0.02:
+        elif average_volume > 0.055:
             print ('怒りレベル：2')
             angry(2)
             angry_count += 1
-        elif average_volume > 0.015:
+        elif average_volume > 0.04:
             print ('怒りレベル：1')
             angry(1)
             angry_count += 1
