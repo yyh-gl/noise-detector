@@ -26,6 +26,7 @@ def update_plot(frame):
     global volumes
     global count
 
+    count += 1
     while True:
         try:
             data = q.get_nowait()
@@ -39,7 +40,6 @@ def update_plot(frame):
         volumes = list(map(lambda num: abs(num) , data))
         total_volumes += sum(volumes)
 
-        count += 1
         if count == 5:
             count = 0
             average_volume = total_volumes / (len(volumes) * 5)
