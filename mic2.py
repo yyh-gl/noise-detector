@@ -6,6 +6,7 @@ import numpy as np
 import sounddevice as sd
 import pygame.mixer
 import time
+from datetime import datetime
 
 
 def audio_callback(indata, outdata, frames, time, status):
@@ -55,6 +56,7 @@ def judge(average_volume):
 
     global angry_count
 
+    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
     print(average_volume)
     try:
         if angry_count > 5:
@@ -73,6 +75,7 @@ def judge(average_volume):
             print ('怒りレベル：1')
             angry(1)
             angry_count += 1
+
     except Exception as e:
         print ("error")
         print(e.args)
