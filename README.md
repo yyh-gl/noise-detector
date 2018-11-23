@@ -1,5 +1,8 @@
 # 騒音検知システム
 
+## 動作環境
+Python 3.6.1
+
 ## 実行手順
 `python main_with_plot.py`
 
