@@ -37,12 +37,15 @@ def update_plot(frame):
         shift = len(data)
         plotdata = np.roll(plotdata, -shift, axis=0)
         plotdata[-shift:, :] = data
-        
+
+        # 取得音量を保存
         volumes = list(map(lambda num: abs(num) , data))
         total_volumes += sum(volumes)
 
+        # 5秒ごとに騒音判定
         if count == 5:
             count = 0
+            # 音量の平均値を用いて騒音検知
             average_volume = total_volumes / (len(volumes) * 5)
             judge(average_volume)
             total_volumes = 0
@@ -60,7 +63,7 @@ def judge(average_volume):
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
     print(average_volume)
     try:
-        if angry_count >= 5:
+        if angry_count >= 4:
             print ('しつこーい')
             angry_count = 0
             angry(0)
