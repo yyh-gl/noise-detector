@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sounddevice as sd
 import pygame.mixer
+import time
 
 
 def audio_callback(indata, outdata, frames, time, status):
@@ -15,6 +16,7 @@ def audio_callback(indata, outdata, frames, time, status):
 
     global q
     q.put(indata)
+
 
 def update_plot(frame):
     """matplotlibのアニメーション更新毎に呼ばれるグラフ更新関数"""
@@ -38,7 +40,7 @@ def update_plot(frame):
         count += 1
         if count == 5:
             count = 0
-            judge(average_volume)
+            average_volume = judge(average_volume)
 
         lines[0].set_ydata(plotdata[:, 0])
 
@@ -55,40 +57,53 @@ def judge(average_volume):
             print ('しつこーい')
             angry_count = 0
             angry(0)
+            return 0
         elif average_volume > 0.01:
             print ('怒りレベル：1')
             angry(1)
             angry_count += 1
+            return 0
         elif average_volume > 0.02:
             print ('怒りレベル：2')
             angry(2)
             angry_count += 1
+            return 0
         elif average_volume > 0.03:
             print ('怒りレベル：3')
             angry(3)
             angry_count += 1
-    except:
+            return 0
+    except Exception as e:
         print ("error")
+        print(e.args)
+
+    return average_volume
 
 def angry(level):
     """怒る関数"""
+
+    global q
 
     # mixerモジュールの初期化
     pygame.mixer.init(frequency = 48000, size = -16, channels = 2, buffer = 1024)
 
     # 音楽ファイルの読み込み
     if level == 1:
-        pygame.mixer.music.load("level1.mp3")
+        pygame.mixer.music.load("level1.wav")
     elif level == 2:
-        pygame.mixer.music.load("level2.mp3")
+        pygame.mixer.music.load("level1.wav")
     elif level == 3:
-        pygame.mixer.music.load("level3.mp3")
+        pygame.mixer.music.load("level1.wav")
     else:
         pygame.mixer.music.load("shitsukoi.mp3")
 
     # 音楽再生、および再生回数の設定(-1はループ再生)
     pygame.mixer.music.play(1)
-    time.sleep(10)
+    time.sleep(3)
+
+    # スリープ中もデータ取得するしているのでクリアする
+    q = queue.Queue()
+
     # 再生の終了
     pygame.mixer.music.stop()
 
