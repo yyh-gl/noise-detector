@@ -4,6 +4,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 import numpy as np
 import sounddevice as sd
+import pygame.mixer
 
 
 def audio_callback(indata, outdata, frames, time, status):
@@ -44,7 +45,9 @@ def update_plot(frame):
 
     return lines
 
-def judge(average_volume): # 定期的に呼び出される
+def judge(average_volume):
+    """怒り判定する関数"""
+
     global angry_count
 
     print(average_volume)
@@ -52,24 +55,50 @@ def judge(average_volume): # 定期的に呼び出される
         if angry_count > 5:
             print ('しつこーい')
             angry_count = 0
+            angry(0)
         elif average_volume > 0.01:
-            print ('angry level three')
+            print ('怒りレベル：1')
+            angry(1)
             angry_count += 1
         elif average_volume > 0.02:
-            print ('angry level two')
+            print ('怒りレベル：2')
+            angry(2)
             angry_count += 1
         elif average_volume > 0.03:
-            print ('angry level one')
+            print ('怒りレベル：3')
+            angry(3)
             angry_count += 1
     except:
         print ("error")
 
+def angry(level):
+    """怒る関数"""
+
+    # mixerモジュールの初期化
+    pygame.mixer.init(frequency = 48000, size = -16, channels = 2, buffer = 1024)
+
+    # 音楽ファイルの読み込み
+    if level == 1:
+        pygame.mixer.music.load("level1.mp3")
+    elif level == 2:
+        pygame.mixer.music.load("level2.mp3")
+    elif level == 3:
+        pygame.mixer.music.load("level3.mp3")
+    else:
+        pygame.mixer.music.load("shitsukoi.mp3")
+
+    # 音楽再生、および再生回数の設定(-1はループ再生)
+    pygame.mixer.music.play(1)
+    time.sleep(10)
+    # 再生の終了
+    pygame.mixer.music.stop()
+
 
 if __name__ == '__main__':
     samplerate = 48000   # サンプリング周波数
-    window = 0.2        # グラフ表示サンプル数決定係数
-    interval = 1000        # グラフ更新頻度（ミリ秒）
-    channels = 1        # チャンネル数（1固定）
+    window = 0.2         # グラフ表示サンプル数決定係数
+    interval = 1000      # グラフ更新頻度（ミリ秒）
+    channels = 1         # チャンネル数（1固定）
 
     q = queue.Queue()
 
