@@ -68,11 +68,11 @@ def judge(average_volume):
             print ('怒りレベル：3')
             angry(3)
             angry_count += 1
-        elif average_volume > 0.055:
+        elif average_volume > 0.06:
             print ('怒りレベル：2')
             angry(2)
             angry_count += 1
-        elif average_volume > 0.04:
+        elif average_volume > 0.035:
             print ('怒りレベル：1')
             angry(1)
             angry_count += 1
