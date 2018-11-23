@@ -16,7 +16,6 @@ def audio_callback(indata, outdata, frames, time, status):
     global q
     q.put(indata)
 
-
 def update_plot(frame):
     """matplotlibのアニメーション更新毎に呼ばれるグラフ更新関数"""
 
