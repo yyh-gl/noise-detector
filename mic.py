@@ -55,6 +55,7 @@ def judge(): # 定期的に呼び出される
         mic_ave = int(sum(max_data)/len(max_data)) # 60秒間のマイク受信音量の平均値を出す
         max_data = []
         volume_text = '音量:{0}' . format(mic_ave)
+        print(max_data)
         try:
             print (volume_text)
             if angry_count > 5:
