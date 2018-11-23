@@ -8,8 +8,8 @@ import sounddevice as sd
 
 def audio_callback(indata, outdata, frames, time, status):
     """サンプリングごとに呼ばれるコールバック関数"""
-    if status:
-        print(status, file=sys.stderr)
+    #if status:
+    #    print(status, file=sys.stderr)
     outdata[:] = indata
 
     global q
@@ -20,6 +20,8 @@ def update_plot(frame):
     """matplotlibのアニメーション更新毎に呼ばれるグラフ更新関数"""
 
     global plotdata
+    global volumes
+    global count
     while True:
         try:
             data = q.get_nowait()
@@ -29,28 +31,60 @@ def update_plot(frame):
         shift = len(data)
         plotdata = np.roll(plotdata, -shift, axis=0)
         plotdata[-shift:, :] = data
+        
+        volumes = list(map(lambda num: abs(num) , data))
+        average_volume = sum(volumes) / len(volumes)
+        
+        count += 1
+        if count == 5:
+            count = 0
+            judge(average_volume)
 
         lines[0].set_ydata(plotdata[:, 0])
 
     return lines
 
+def judge(average_volume): # 定期的に呼び出される
+    global angry_count
+
+    print(average_volume)
+    try:
+        if angry_count > 5:
+            print ('しつこーい')
+            angry_count = 0
+        elif average_volume > 0.01:
+            print ('angry level three')
+            angry_count += 1
+        elif average_volume > 0.02:
+            print ('angry level two')
+            angry_count += 1
+        elif average_volume > 0.03:
+            print ('angry level one')
+            angry_count += 1
+    except:
+        print ("error")
+
 
 if __name__ == '__main__':
-    samplerate = 4000   # サンプリング周波数
+    samplerate = 48000   # サンプリング周波数
     window = 0.2        # グラフ表示サンプル数決定係数
-    interval = 3        # グラフ更新頻度（ミリ秒）
+    interval = 1000        # グラフ更新頻度（ミリ秒）
     channels = 1        # チャンネル数（1固定）
 
     q = queue.Queue()
 
+    angry_count = 0
+    count = 0
+
     length = int(window * samplerate)   # グラフに表示するサンプル数
     plotdata = np.zeros((length, 1))
+    volumes = []
 
     fig, ax = plt.subplots()
     lines = ax.plot(plotdata)          # グラフのリアルタイム更新の最初はプロットから
     ax.axis((0, len(plotdata), -1, 1))
 
     stream = sd.Stream(channels=channels, samplerate=samplerate, callback=audio_callback)
-    ani = FuncAnimation(fig, update_plot, interval=interval, blit=True)
+    ani = FuncAnimation(fig, update_plot, interval=interval, blit=False)
     with stream:
         plt.show()
