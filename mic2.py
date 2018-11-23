@@ -42,6 +42,11 @@ def update_plot(frame):
         count += 1
         if count == 5:
             count = 0
+            print('---------')
+            print(total_volumes)
+            print('---------')
+            print(len(volumes) * 5)
+            print('---------')
             average_volume = total_volumes / (len(volumes) * 5)
             judge(average_volume)
             total_volumes = 0
@@ -55,7 +60,7 @@ def judge(average_volume):
 
     global angry_count
 
-    print(average_volume)
+    # print(average_volume)
     try:
         if angry_count > 5:
             print ('しつこーい')
