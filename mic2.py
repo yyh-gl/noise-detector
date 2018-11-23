@@ -38,7 +38,7 @@ def update_plot(frame):
         
         volumes = list(map(lambda num: abs(num) , data))
         average_volumes.append(sum(volumes) / len(volumes))
-
+        print average_volumes
         count += 1
         if count == 5:
             count = 0
