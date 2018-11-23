@@ -35,11 +35,12 @@ def update_plot(frame):
         plotdata[-shift:, :] = data
         
         volumes = list(map(lambda num: abs(num) , data))
-        average_volume = sum(volumes) / len(volumes)
-        
+        average_volumes.append(sum(volumes) / len(volumes))
+
         count += 1
         if count == 5:
             count = 0
+            average_volume = sum(average_volumes) / len(average_volume)
             judge(average_volume)
 
         lines[0].set_ydata(plotdata[:, 0])
@@ -110,6 +111,7 @@ if __name__ == '__main__':
 
     q = queue.Queue()
 
+    average_volumes = []
     angry_count = 0
     count = 0
 
