@@ -13,7 +13,9 @@ def audio_callback(indata, outdata, frames, time, status):
     """サンプリングごとに呼ばれるコールバック関数"""
     #if status:
     #    print(status, file=sys.stderr)
-    outdata[:] = indata
+
+    # ここのコメントを外すと取得した音声をそのまま出力する
+    #outdata[:] = indata
 
     global q
     q.put(indata)
@@ -67,15 +69,15 @@ def judge(average_volume):
             print ('しつこーい')
             angry_count = 0
             angry(0)
-        elif average_volume > 0.1:
+        elif average_volume > 0.2:
             print ('怒りレベル：3')
             angry(3)
             angry_count += 1
-        elif average_volume > 0.06:
+        elif average_volume > 0.1:
             print ('怒りレベル：2')
             angry(2)
             angry_count += 1
-        elif average_volume > 0.035:
+        elif average_volume > 0.06:
             print ('怒りレベル：1')
             angry(1)
             angry_count += 1
@@ -95,16 +97,20 @@ def angry(level):
     # 音楽ファイルの読み込み
     if level == 1:
         pygame.mixer.music.load("level1.wav")
+        sleep_time = 6
     elif level == 2:
         pygame.mixer.music.load("level2.wav")
+        sleep_time = 5
     elif level == 3:
         pygame.mixer.music.load("level3.wav")
+        sleep_time = 5
     else:
         pygame.mixer.music.load("shitsukoi.wav")
+        sleep_time = 8
 
     # 音楽再生、および再生回数の設定(-1はループ再生)
     pygame.mixer.music.play(1)
-    time.sleep(3)
+    time.sleep(sleep_time)
 
     # スリープ中もデータ取得するしているのでクリアする
     q = queue.Queue()
