@@ -22,8 +22,10 @@ def update_plot(frame):
     """matplotlibのアニメーション更新毎に呼ばれるグラフ更新関数"""
 
     global plotdata
+    global average_volumes
     global volumes
     global count
+
     while True:
         try:
             data = q.get_nowait()
@@ -40,8 +42,9 @@ def update_plot(frame):
         count += 1
         if count == 5:
             count = 0
-            average_volume = sum(average_volumes) / len(average_volume)
+            average_volume = sum(average_volumes) / len(average_volumes)
             judge(average_volume)
+            average_volumes = []
 
         lines[0].set_ydata(plotdata[:, 0])
 
