@@ -38,7 +38,7 @@ def update_plot(frame):
         
         volumes = list(map(lambda num: abs(num) , data))
         average_volumes.append(sum(volumes) / len(volumes))
-        print average_volumes
+
         count += 1
         if count == 5:
             count = 0
@@ -61,17 +61,17 @@ def judge(average_volume):
             print ('しつこーい')
             angry_count = 0
             angry(0)
-        elif average_volume > 0.005:
-            print ('怒りレベル：1')
-            angry(1)
+        elif average_volume > 0.015:
+            print ('怒りレベル：3')
+            angry(3)
             angry_count += 1
-        elif average_volume > 0.007:
+        elif average_volume > 0.01:
             print ('怒りレベル：2')
             angry(2)
             angry_count += 1
-        elif average_volume > 0.009:
-            print ('怒りレベル：3')
-            angry(3)
+        elif average_volume > 0.005:
+            print ('怒りレベル：1')
+            angry(1)
             angry_count += 1
     except Exception as e:
         print ("error")
